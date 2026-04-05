@@ -50,7 +50,7 @@ CLI_BACKENDS: dict[str, dict[str, Any]] = {
         "args_template": ["-p", "{prompt}"],
         "env_check": None,
         "supports_system_prompt": True,
-        "system_prompt_args": ["--system", "{system}"],
+        "system_prompt_args": ["--system-prompt", "{system}"],
     },
     "codex": {
         "cmd": "codex",
