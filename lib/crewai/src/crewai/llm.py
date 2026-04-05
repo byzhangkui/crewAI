@@ -319,6 +319,8 @@ SUPPORTED_NATIVE_PROVIDERS: Final[list[str]] = [
     "hosted_vllm",
     "cerebras",
     "dashscope",
+    # CLI-based providers (no API key needed)
+    "cli",
 ]
 
 
@@ -407,6 +409,8 @@ class LLM(BaseLLM):
                 "hosted_vllm": "hosted_vllm",
                 "cerebras": "cerebras",
                 "dashscope": "dashscope",
+                # CLI-based providers
+                "cli": "cli",
             }
 
             canonical_provider = provider_mapping.get(prefix.lower())
@@ -561,6 +565,10 @@ class LLM(BaseLLM):
             # azure does not provide a list of available models, determine a better way to handle this
             return True
 
+        if provider == "cli":
+            # CLI providers accept any model name (claude, codex, gemini, etc.)
+            return True
+
         # Fallback to pattern matching for models not in constants
         return cls._matches_provider_pattern(model, provider)
 
@@ -624,6 +632,12 @@ class LLM(BaseLLM):
             from crewai.llms.providers.bedrock.completion import BedrockCompletion
 
             return BedrockCompletion
+
+        # CLI-based providers (no API key needed)
+        if provider == "cli":
+            from crewai.llms.providers.cli.completion import CliCompletion
+
+            return CliCompletion
 
         # OpenAI-compatible providers
         openai_compatible_providers = {
